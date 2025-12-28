@@ -2,239 +2,224 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FAQ | chocoshrooms.store</title>
-
   <style>
     :root{
-      --card-bg: rgba(210, 210, 210, 0.38);
-      --card-border: rgba(255, 255, 255, 0.28);
-      --shadow: 0 18px 60px rgba(0,0,0,.28);
       --text: rgba(255,255,255,.92);
-      --radius: 22px;
-      --w-max: 860px;
+      --muted: rgba(255,255,255,.78);
+      --card: rgba(255,255,255,.14);
+      --card-border: rgba(255,255,255,.22);
+      --shadow: rgba(0,0,0,.35);
+      --pill-bg: rgba(255,255,255,.14);
+      --pill-border: rgba(255,255,255,.22);
     }
 
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
-
-    /* === ФОН як в index.html === */
+    /* ===== Background (ONE-TO-ONE with index.html) ===== */
     body{
-      margin: 0;
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-
-      background:
-        radial-gradient(1200px 600px at 50% 15%, rgba(255,255,255,.08), transparent 60%),
-        radial-gradient(900px 500px at 20% 80%, rgba(0,0,0,.28), transparent 60%),
-        url("/bg.png") center / cover no-repeat fixed;
+      background:#0f1115;
+      overflow-x:hidden;
     }
 
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .bg::before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background: url("bg.png") center/cover no-repeat;
+      filter: blur(20px) saturate(120%) contrast(95%);
+      opacity:.55;
+      transform: scale(1.06);
+    }
+    .vignette{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,.0) 0%, rgba(0,0,0,.25) 55%, rgba(0,0,0,.55) 100%);
+    }
+
+    /* ===== Layout ===== */
     .wrap{
-      min-height: 100svh;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      padding-top: calc(18px + env(safe-area-inset-top));
-      padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: clamp(18px, 3vw, 40px);
+      position:relative;
+      z-index:1;
     }
 
     .card{
-      width: min(var(--w-max), 92vw);
-      max-height: min(900px, calc(100svh - 36px));
-      overflow: hidden;
-
-      border-radius: var(--radius);
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      width:min(920px, 100%);
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.20);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.35);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding: clamp(16px, 2.5vw, 26px);
     }
 
     .card__header{
-      display: flex;
-      align-items: center;
-      justify-content: flex-start; /* справа нічого не треба */
-      gap: 12px;
-      padding: 16px 18px 10px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      margin-bottom: 14px;
     }
 
-    .card__content{
-      padding: 10px 18px 18px 18px;
-      overflow: auto;
-      max-height: calc(100svh - 36px - 64px);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* === НЕОНОВИЙ перелив (як раніше) === */
-    @keyframes neonShift {
-      0%   { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    .neon{
-      position: relative;
-      overflow: hidden;
+    /* ===== Neon pill buttons (Back + privnote) ===== */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.22);
-      color: rgba(0,0,0,.72);
-      font-weight: 900;
-      letter-spacing: .06em;
-      text-decoration: none;
-      box-shadow: 0 14px 30px rgba(0,0,0,.22);
-      background: linear-gradient(90deg,
-        rgba(255,105,180,.85),
-        rgba(255,215,0,.75),
-        rgba(0,255,200,.75),
-        rgba(120,140,255,.75)
-      );
-      animation: neonShift 5s linear infinite;
+      text-decoration:none;
+      color: var(--text);
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      box-shadow: 0 10px 25px rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
 
+    /* animated neon gradient like before */
+    .neon{
+      position:relative;
+      isolation:isolate;
+      overflow:hidden;
+    }
+    .neon::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: linear-gradient(90deg,
+        #ff4fd8, #ff9d2f, #fff04a, #52ff6a, #39d8ff, #7a5cff, #ff4fd8);
+      background-size: 200% 200%;
+      filter: blur(10px);
+      opacity:.55;
+      animation: neonShift 6s linear infinite;
+      z-index:-2;
+    }
     .neon::after{
       content:"";
       position:absolute;
-      inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 55%);
-      transform: rotate(20deg);
-      pointer-events:none;
-      opacity:.35;
-    }
-
-    .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-    }
-
-    .pill__icon{ font-weight: 900; }
-    .pill__text{ font-weight: 900; }
-
-    .faq{
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 14px;
-    }
-
-    .faq__item{
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 12px;
-      align-items: start;
-    }
-
-    .faq__n{
-      font-weight: 900;
-      opacity: .92;
-      font-size: 18px;
-      line-height: 1.2;
-    }
-
-    .faq__text{
-      font-weight: 800;
-      line-height: 1.35;
-      font-size: clamp(16px, 2.2vw, 18px);
-      color: rgba(255,255,255,.95);
-    }
-
-    /* privnote.com як неон-чіп */
-    .chip{
-      display: inline-block;
-      padding: 2px 12px;
-      margin: 0 2px;
+      inset:1px;
       border-radius: 999px;
-      font-weight: 900;
-      color: rgba(0,0,0,.72);
+      background: rgba(255,255,255,.12);
+      z-index:-1;
     }
 
-    .faq__item--pgp{ align-items: stretch; }
-
-    .pgp{
-      border-radius: 14px;
-      background: rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.14);
-      overflow: hidden;
+    @keyframes neonShift{
+      0%{ background-position: 0% 50%; }
+      50%{ background-position: 100% 50%; }
+      100%{ background-position: 0% 50%; }
     }
 
-    .pgp__pre{
+    .pill__icon{ font-weight: 700; opacity:.95; }
+    .pill__text{ font-weight: 700; letter-spacing: .2px; }
+
+    /* ===== FAQ content ===== */
+    .faq{
       margin: 0;
+      padding-left: 1.25em;
+      color: var(--muted);
+      font-size: clamp(16px, 1.8vw, 18px);
+      line-height: 1.5;
+    }
+    .faq li{ margin: 10px 0 14px; }
+    .faq strong{ color: var(--text); }
+
+    .inline-pill{
+      display:inline-block;
+      vertical-align: middle;
+      margin: 0 4px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      text-decoration:none;
+      color: var(--text);
+    }
+
+    /* PGP block */
+    .pgp{
+      margin-top: 10px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
       padding: 14px;
+      overflow:auto;
+      color: rgba(255,255,255,.88);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.35;
-      color: rgba(255,255,255,.90);
-      overflow-x: auto;
-      white-space: pre;
-      -webkit-overflow-scrolling: touch;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
     }
 
-    .actions{
-      display: grid;
-      place-items: center;
-      padding-top: 18px;
-      gap: 10px;
+    /* ===== Contact button (keep your current look) ===== */
+    .contact-wrap{
+      display:flex;
+      justify-content:center;
+      margin-top: 16px;
     }
-
-    /* contact неон-кнопка */
-    .contact{
+    #contactBtn{
       width: 92px;
       height: 92px;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-    }
-
-    .contact:active{ transform: translateY(1px) scale(.99); }
-
-    .contact__inner{
-      display: grid;
-      place-items: center;
-      gap: 4px;
-      font-weight: 900;
-      letter-spacing: .08em;
-    }
-
-    .contact__icon{
-      font-size: 18px;
-      filter: drop-shadow(0 6px 14px rgba(0,0,0,.18));
-    }
-
-    .contact__label{ font-size: 11px; }
-
-    .toast{
-      opacity: 0;
-      transform: translateY(6px);
-      transition: 160ms ease;
-      font-weight: 800;
-      color: rgba(255,255,255,.92);
-      background: rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.12);
-      padding: 8px 12px;
       border-radius: 999px;
-      pointer-events: none;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      box-shadow: 0 14px 30px rgba(0,0,0,.25);
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+    }
+    #contactBtn.neon::after{ border-radius: 999px; } /* keep neon overlay circular */
+
+    .mushroom{
+      font-size: 20px;
+      line-height: 1;
+    }
+    .contactText{
+      font-size: 12px;
+      letter-spacing: 1px;
     }
 
-    .toast--show{
-      opacity: 1;
-      transform: translateY(0);
-    }
-
+    /* Small screens: keep it comfy */
     @media (max-width: 420px){
-      .card__header{ padding: 14px 14px 8px 14px; }
-      .card__content{ padding: 8px 14px 14px 14px; }
-      .faq__item{ grid-template-columns: 24px 1fr; gap: 10px; }
-      .pgp__pre{ font-size: 12px; }
+      .card{ padding: 16px; border-radius: 18px; }
+      .pill{ padding: 9px 12px; gap:8px; }
+      #contactBtn{ width: 88px; height: 88px; }
     }
   </style>
 </head>
 
 <body>
+  <!-- same background technique as index -->
+  <div class="bg" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
   <main class="wrap">
     <section class="card" role="region" aria-label="FAQ">
       <header class="card__header">
@@ -244,87 +229,60 @@
         </a>
       </header>
 
-      <div class="card__content">
-        <ol class="faq">
-          <li class="faq__item">
-            <span class="faq__n">1.</span>
-            <span class="faq__text">
-              If you want to immerse yourself in real magic, send us an email and we will reply as soon as possible.
-            </span>
-          </li>
-
-          <li class="faq__item">
-            <span class="faq__n">2.</span>
-            <span class="faq__text">
-              When writing your message, please use the
-              <a class="chip neon" href="https://privnote.com" target="_blank" rel="noopener noreferrer">privnote.com</a>
-              service or encrypt the email using the PGP key shown below.
-            </span>
-          </li>
-
-          <li class="faq__item faq__item--pgp">
-            <span class="faq__n">3.</span>
-            <div class="pgp" aria-label="PGP public key">
-<pre class="pgp__pre">-----BEGIN PGP PUBLIC KEY BLOCK-----
+      <ol class="faq">
+        <li><strong>If you want to immerse yourself in real magic</strong>, send us an email and we will reply as soon as possible.</li>
+        <li><strong>When writing your message</strong>, please use the
+          <a class="inline-pill pill neon" href="https://privnote.com" target="_blank" rel="noopener">privnote.com</a>
+          service or encrypt the email using the PGP key shown below.
+        </li>
+        <li>
+          <div class="pgp" aria-label="PGP public key block">
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 PASTE_YOUR_KEY_HERE
------END PGP PUBLIC KEY BLOCK-----</pre>
-            </div>
-          </li>
+-----END PGP PUBLIC KEY BLOCK-----
+          </div>
+        </li>
+        <li><strong>We will not be able to respond</strong> to your message if it is not encrypted using PGP or Privnote.</li>
+      </ol>
 
-          <li class="faq__item">
-            <span class="faq__n">4.</span>
-            <span class="faq__text">
-              We will not be able to respond to your message if it is not encrypted using PGP or Privnote.
-            </span>
-          </li>
-        </ol>
-
-        <div class="actions">
-          <button class="contact neon" type="button" id="contactBtn" aria-label="Contact">
-            <span class="contact__inner">
-              <span class="contact__icon" aria-hidden="true">🍄</span>
-              <span class="contact__label">CONTACT</span>
-            </span>
-          </button>
-          <div class="toast" id="toast" role="status" aria-live="polite"></div>
-        </div>
+      <div class="contact-wrap">
+        <button id="contactBtn" class="neon" type="button" aria-label="Contact">
+          <span class="mushroom">🍄</span>
+          <span class="contactText">CONTACT</span>
+        </button>
       </div>
     </section>
   </main>
 
   <script>
-    (function () {
+    // Mobile: open email composer. Desktop: copy to clipboard.
+    (function(){
       const email = "chocoshrooms@proton.me";
       const btn = document.getElementById("contactBtn");
-      const toast = document.getElementById("toast");
+      if(!btn) return;
 
-      function showToast(msg) {
-        toast.textContent = msg;
-        toast.classList.add("toast--show");
-        setTimeout(() => toast.classList.remove("toast--show"), 1800);
-      }
-
-      function isMobile() {
-        return window.matchMedia("(pointer: coarse)").matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      function isMobile(){
+        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
       }
 
       btn.addEventListener("click", async () => {
         if (isMobile()) {
-          window.location.href = `mailto:${email}`;
+          window.location.href = "mailto:" + email;
           return;
         }
-
-        try {
+        try{
           await navigator.clipboard.writeText(email);
-          showToast("Email copied");
-        } catch (e) {
+          // tiny feedback without adding extra UI elements
+          btn.style.transform = "scale(0.98)";
+          setTimeout(()=>btn.style.transform="", 120);
+        }catch(e){
+          // fallback
           const ta = document.createElement("textarea");
           ta.value = email;
           document.body.appendChild(ta);
           ta.select();
           document.execCommand("copy");
-          ta.remove();
-          showToast("Email copied");
+          document.body.removeChild(ta);
         }
       });
     })();
